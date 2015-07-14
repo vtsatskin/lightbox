@@ -7,11 +7,17 @@ delta_t=y-x
 
 secs=delta_t.seconds+1
 
-def hello_world():
-    print "hello world"
-    t2 = Timer(3600, hello_world)
+sufficient_data = True
+
+def coefficients():
+    if sufficient_data:
+    	print "sufficient data"
+    	##Calculate coefficients
+    else
+    	print "insufficient data"
+    	##Wait till tomorrow
+    t2 = Timer(3600*24, hello_world)
     t2.start()   
 
-t = Timer(secs, hello_world)
-print secs
+t = Timer(secs, coefficients)
 t.start()
