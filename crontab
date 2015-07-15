@@ -1,0 +1,15 @@
+
+#will be put in etc/crontab in valspy
+#TODO: Ensure cron.hourly + cron.weekly folders exist in server
+SHELL=/bin/bash
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+MAILTO=root
+HOME=/
+
+# run-parts 
+# 01 - run at 1 min past every hour
+# 02 21 - run at 9:02pm every day
+# To Do: change etc/cron.hourly and daily to point to where python files should 
+# reside
+01 * * * * root run-parts /etc/cron.hourly
+02 21 * * * root run-parts /etc/cron.daily
