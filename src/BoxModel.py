@@ -1,14 +1,42 @@
 import urllib2
+import requests
 
 class BoxModel(object):
   
-  #dummy data from user input
-  def __init__(self, post):
+  #Initialize a box model with server credentials + user input
+  #Should user_id, password be hardcoded if we are just using Val's server
+  def __init__(self, post, url, user_id, password):
+
     self.historical = post['historical']
     self.shading_efficiency = 0
     self.avgTempCoefficient = 0
   	self.tempCoefficientList = []
+
+    ##Server authentication credentials
+    self.url = url
+    self.user_id = user_id
+    self.password = password
+
+
+  #HTTP Methods
+  def request(self, method, url, **kwargs):
+    """
+    method = http method for request
+    url = url/endpoint for request
+    kwargs --
+    params:url parameters
+    data: data to be converted to json
+    """
+    data = (json.dumps(kwargs['data']) if "data" in kwargs else None)
+    headers = ({'content-type':'application/json'} if data else None)
+    params = (kwargs['params'] if "params" in kwargs else None)
+    request = method(url, auth=(self.user_id, self.password), params = params, data=data, headers=headers)
+    request.raise_for_status()
+    return request
   
+  #def updateCoefficientModel (self, coefficientData):
+
+
               
   #Efficiency Temperature Portion of Model 
   def avg_coefficient(self, histHourly, actualHourly):
@@ -31,8 +59,8 @@ class BoxModel(object):
 	def panel_degradation_efficiency(self, year):
     return 0.99**year
                       
-#HTTP CLASS , place import at type of file
-import requests
+#HTTP CLASS , place import at top of file
+#import requests
     ''' 
     Example requests
   	--------------------------------------------
