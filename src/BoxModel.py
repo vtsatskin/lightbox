@@ -1,22 +1,24 @@
 import urllib2
-import requests
+import requests, json, logging
 
 class BoxModel(object):
   
   #Initialize a box model with server credentials + user input
-  #Should user_id, password be hardcoded if we are just using Val's server
   def __init__(self, post, url, user_id, password):
+    """ 
+    Should user_id, password be hardcoded if we are just using Val's server
+    """
 
     self.historical = post['historical']
     self.shading_efficiency = 0
     self.avgTempCoefficient = 0
-  	self.tempCoefficientList = []
+    self.tempCoefficientList = []
 
     ##Server authentication credentials
     self.url = url
     self.user_id = user_id
     self.password = password
-
+    self.unique_id = 0
 
   #HTTP Methods
   def request(self, method, url, **kwargs):
@@ -35,16 +37,29 @@ class BoxModel(object):
     return request
   
   #def updateCoefficientModel (self, coefficientData):
+  #ARGS -> if our URLs in CouchDB are going to be /box/<id>/args[0]/args[1] etc
+
+  def updateBox_cmd(self, method, id, *args, **kwargs):
+    cmdUrl = "{url}/box/id/{args}".format(
+          url = self.url, 
+          args=("/" + "/".join([str(arg) for arg in args]) if args else ""))
+    request = self.request(method, cmdUrl, **kwargs)
+
+    return request.json()
 
 
-              
   #Efficiency Temperature Portion of Model 
-  def avg_coefficient(self, histHourly, actualHourly):
-  	'''Calculate temperature T = Tamb + Coefficient'''
-                           
-    actualHourly - histHourly = tempCo
+  def avg_coefficient(self, readings):
+    '''Calculate temperature T = Tamb + Coefficient'''
+
+    readings['actualHourly'] - readings['histHourly'] = tempCo
     self.tempCoefficientList.append(abs(tempCoefficient))
-    return sum(self.tempCoefficientList)/(float(len(self.tempCoefficientList)))
+    avg = sum(self.tempCoefficientList)/(float(len(self.tempCoefficientList)))
+
+    payload = [{'avgCoefficient':avg}]
+    self.updateBox_cmd(requests.post, self.unique_id, data=payload)  
+
+
   
   def avg_hist_temp(self, hist):
     return sum(hist)/len(hist)
