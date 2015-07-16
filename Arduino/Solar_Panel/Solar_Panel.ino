@@ -18,7 +18,7 @@ int secondVal = analogRead(secondPin);
 float firstVolt = (firstVal/1024.0)*5;
 float secondVolt = (secondVal/1024.0)*5;
 double current = (firstVolt - secondVolt)/smallR;
-double power = current*current*(bigR+smallR);
+double power = current*current*(bigR+smallR+20);
 Serial.print(firstVal);
 Serial.print(", ");
 Serial.print(secondVal);
