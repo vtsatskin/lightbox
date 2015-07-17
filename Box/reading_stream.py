@@ -5,9 +5,9 @@ import json
 import couchdb
 import time
 
-logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-SERIAL_HANDLE='/dev/cu.usbmodem1451'
+SERIAL_HANDLE='/dev/ttyACM0'
 RATE=9600
 
 logging.info("Opening connection to %s at rate of %i", SERIAL_HANDLE, RATE)
