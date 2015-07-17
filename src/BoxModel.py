@@ -48,9 +48,11 @@ class BoxModel(object):
     return request.json()
 
 
+
+'''
+
   #Efficiency Temperature Portion of Model 
   def avg_coefficient(self, readings):
-    '''Calculate temperature T = Tamb + Coefficient'''
 
     readings['actualHourly'] - readings['histHourly'] = tempCo
     self.tempCoefficientList.append(abs(tempCoefficient))
@@ -59,8 +61,6 @@ class BoxModel(object):
     payload = [{'avgCoefficient':avg}]
     self.updateBox_cmd(requests.post, self.unique_id, data=payload)  
 
-
-  
   def avg_hist_temp(self, hist):
     return sum(hist)/len(hist)
   
@@ -73,6 +73,8 @@ class BoxModel(object):
   #Efficiency degradation
 	def panel_degradation_efficiency(self, year):
     return 0.99**year
+
+'''
                       
 #HTTP CLASS , place import at top of file
 #import requests
