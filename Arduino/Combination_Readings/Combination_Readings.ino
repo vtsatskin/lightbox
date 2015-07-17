@@ -34,6 +34,9 @@ void loop() {
   float firstVolt = (firstVal/1024.0)*5;
   float secondVolt = (secondVal/1024.0)*5;
   double current = (firstVolt - secondVolt)/smallR;
+  if(current < 0) {
+    current = 0;
+  }
   double power = current*current*(bigR+smallR+20);
  
   bmp.getEvent(&eventP);
@@ -46,6 +49,7 @@ void loop() {
   {
     heading = 360 + heading; 
   }
+ 
   Serial.print("{");
   
   Serial.print("\"current\": ");  
@@ -73,6 +77,7 @@ void loop() {
   Serial.print(heading);
   Serial.print("]");
   Serial.print(", ");
+  
   Serial.print("\"accelerometer\": ");
   Serial.print("[");
   Serial.print(eventA.acceleration.x);
