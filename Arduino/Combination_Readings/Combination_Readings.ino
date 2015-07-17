@@ -23,7 +23,7 @@ void displaySensorDetails(void)
 {
   sensor_t sensor;
   accel.getSensor(&sensor);
-  Serial.println("------------------------------------");
+  /*Serial.println("------------------------------------");
   Serial.print  ("Sensor:       "); Serial.println(sensor.name);
   Serial.print  ("Driver Ver:   "); Serial.println(sensor.version);
   Serial.print  ("Unique ID:    "); Serial.println(sensor.sensor_id);
@@ -31,14 +31,14 @@ void displaySensorDetails(void)
   Serial.print  ("Min Value:    "); Serial.print(sensor.min_value); Serial.println(" m/s^2");
   Serial.print  ("Resolution:   "); Serial.print(sensor.resolution); Serial.println(" m/s^2");  
   Serial.println("------------------------------------");
-  Serial.println("");
+  Serial.println("");*/
   delay(500);
 }
 
 void setup(void) {
   Serial.begin(9600);
-  Serial.println("Sensor Test");
-  Serial.println("");
+  /*Serial.println("Sensor Test");
+  Serial.println("");*/
   
   displaySensorDetails();
 
@@ -72,68 +72,65 @@ void loop() {
   {
     heading = 360 + heading; 
   }
-
-  Serial.print("Solar Panel Current: ");  
+  Serial.print("{");
+  Serial.print("\"solarpanelcurrent\": ");  
   Serial.print(current*1000,6);
-  Serial.println("mA");
-  
-  Serial.print("Solar Panel Power: ");  
+  Serial.print(", ");
+  Serial.print("\"solarpanelpower\": ");  
   Serial.print(power,6);
-  Serial.println("W");
- 
-    if (eventP.pressure)
+  Serial.print(", ");
+  Serial.print("\"pressure\": ");
+  if (eventP.pressure)
   {
-    Serial.print("Pressure: ");
     Serial.print(eventP.pressure);
-    Serial.println(" hPa.");
   }
   else
   {
-    Serial.println("Error: Pressure sensor");
+    Serial.print("\"error\"");
   }
+    Serial.print(", ");
   if (temperature)
   {
-    Serial.print("Temperature: ");
+    Serial.print("\"temperature\": ");
     Serial.print(temperature);
-    Serial.println(" C.");
   }
   else
   {
-    Serial.println("Error: Temperature sensor");
+    Serial.println("\"error\"");
   }
+  Serial.print(", ");
+  Serial.print("\"compass\": ");
    if (heading)
   {
-    Serial.print("Compass Heading: ");
+    Serial.print("[");
     Serial.print(eventM.magnetic.y);
     Serial.print(", ");
     Serial.print(eventM.magnetic.x);
     Serial.print(", ");
     Serial.print(heading);
-    Serial.print("\n");
+    Serial.print("] ");
   }
   else
   {
-    Serial.println("Error: Compass sensor");
+    Serial.print("error");
   }
-  
+  Serial.print(", ");
+  Serial.print("\"accelerometer\": ");
   if (1)
   {
-    Serial.print("X Acceleration: ");
+    Serial.print("[");
     Serial.print(eventA.acceleration.x);
-    Serial.println(" m/s^2, ");
-    Serial.print("Y Acceleration: ");
+    Serial.print(",");
     Serial.print(eventA.acceleration.y);
-    Serial.println(" m/s^2, ");
-    Serial.print("Z Acceleration: ");
+    Serial.print(",");
     Serial.print(eventA.acceleration.z);
-    Serial.println(" m/s^2.");
-    Serial.print("\n");
+    Serial.print("]");
   }
   else
   {
-    Serial.println("Error: Accelerometer sensor");
+    Serial.print("\"error\"");
   }
-    
+  Serial.print("}");  
    delay(1000);
   
 }
