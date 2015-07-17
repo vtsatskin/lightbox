@@ -1,11 +1,12 @@
 import json
+import numpy as np
 
 def create_minutely(time, hours):
-	minutely = [{"key": time + 60*x, "value": 20 + (x%6)*(-1)**x} for x in range(60*hours)]
+	minutely = [{"key": time + 60*x, "value": np.random.normal(25, 1) + (x/60)%300} for x in range(60*hours)]
 	return minutely
 
 def create_hourly(time):
-	hourly = [{"key": time + 3600*x, "value": 15 + (x%6)*(-1)**x} for x in range(24)]
+	hourly = [{"key": time + 3600*x, "value": np.random.normal(20, 1) + x%5} for x in range(24)]
 	return hourly
 
 ##Dump to text file
