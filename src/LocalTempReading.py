@@ -5,12 +5,14 @@ import datetime.datetime
                            
 class LocalTempReading(object)
                            
-    def __init__(self,city_code):
+    def __init__(self,city_code, province):
         self.temp = 0
         self.city_code = city_code
+        self.province = province
                            
     def temperature_reading():
-        file = urllib2.urlopen('http://dd.meteo.gc.ca/citypage_weather/xml/ON/'+ self.city_code +'_e.xml')
+        file = urllib2.urlopen('http://dd.meteo.gc.ca/citypage_weather/xml/'
+               + self.province + '/' + self.city_code +'_e.xml')
         tree = ET.parse(file)
         root = tree.getroot()
         current_conditions = root.find('currentConditions')
