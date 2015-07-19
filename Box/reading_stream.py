@@ -13,6 +13,7 @@ import argparse
 parser = argparse.ArgumentParser(description='Reads data from Arduino and streams to CouchDB with option of realtime graphing using Plotly')
 parser.add_argument('-f','--serialfile', help='Serial connection file handle to Arduino',required=False, default='/dev/ttyACM0')
 parser.add_argument('-r','--rate', help='Rate in seconds to save sensor data to CouchDB',required=False, default=60, type=int)
+parser.add_argument('-nc','--no-couchdb', help='Prevents sending of data to CouchDB',required=False)
 parser.add_argument('-g','--graph', help='Graphs data to Plotly',required=False)
 parser.add_argument('-u','--username', help='Plot.ly username',required=False)
 parser.add_argument('-k','--apikey', help='Plot.ly API Key',required=False)
@@ -28,8 +29,9 @@ RATE=9600
 logging.info("Opening connection to %s at rate of %i", SERIAL_HANDLE, RATE)
 ser = serial.Serial(SERIAL_HANDLE, RATE)
 
-couch = couchdb.Server()
-readings = couch['readings']
+if not args.no_couchdb:
+    couch = couchdb.Server()
+    readings = couch['readings']
 
 if args.graph:
     logging.info("Graphing to Plot.ly")
@@ -80,9 +82,10 @@ while True:
 
     logging.debug("JSON reading: %s", data)
 
-    if time.time() - last_save > args.rate:
-        readings.save(data)
-        last_save = time.time()
+    if not args.no_couchdb:
+        if time.time() - last_save > args.rate:
+            readings.save(data)
+            last_save = time.time()
 
     if args.graph and time.time() - last_plot > args.graph_rate:
         stream.write({'x': datetime.datetime.now(), 'y': data['accelerometer'][0]})
