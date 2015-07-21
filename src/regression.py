@@ -18,7 +18,7 @@ min_day = json.loads(text_file.read())
 
 def couch_mapreduce(map_fun, reduce_fun):
 	"""Takes all temperature from couchDB
-		and returns the hourly average
+		and returns the hourly average.
 	"""	
 
 def regression(m_x, r_x, m_y, r_y):

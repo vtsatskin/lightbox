@@ -8,11 +8,12 @@ class SolarPanel(object):
         area: The useful surface area of the panel.
         power: The max power production rating of the panel.
         beta: The temperature coefficient for the solar panel.
+        base_temp: The temperature at which the stated efficiency is measured.
         phi: the shading coefficient.
         tau: the degredation coefficient.
     """
 
-    def __init__(self, company, model_number, efficiency, cost, area, power, beta, phi, tau):
+    def __init__(self, company, model_number, efficiency, cost, area, power, beta, base_temp, phi, tau):
         """Define an object with parameters as entered.
         """
 
@@ -23,6 +24,7 @@ class SolarPanel(object):
         self.area = area
         self.power = power
         self.beta = beta
+        self.base_temp = base_temp
         self.phi = phi
         self.tau = tau
 
