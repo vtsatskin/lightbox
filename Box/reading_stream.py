@@ -7,7 +7,7 @@ import couchdb
 import time
 import datetime
 import plotly.plotly as py
-from plotly.graph_objs import Scatter, Layout, Figure
+from plotly.graph_objs import Scatter, Layout, Figure, YAxis
 import argparse
 
 parser = argparse.ArgumentParser(description='Reads data from Arduino and streams to CouchDB with option of realtime graphing using Plotly')
@@ -35,31 +35,54 @@ if not args.no_couchdb:
 
 if args.graph:
     logging.info("Graphing to Plot.ly")
-    username = args.username
-    api_key = args.apikey
-    stream_token = args.token
+    username = 'mhossein2015'
+    api_key = 'xe1j0wicu4'
+    stream_token1 = 'motco7q58q'
+    stream_token2 = '96jh1bgy95'
+    stream_token3 = 'pn0gxn5x0e'
 
     py.sign_in(username, api_key)
 
-    trace1 = Scatter(
+    powertrace = Scatter(
         x=[],
         y=[],
         stream=dict(
-            token=stream_token,
+            token=stream_token1,
             maxpoints=200
         )
     )
 
-    stream = py.Stream(stream_token)
-    stream.open()
-
-    layout = Layout(
-        title='Raspberry Pi Streaming Sensor Data'
+    currenttrace = Scatter(
+        x=[],
+        y=[],
+        stream=dict(
+            token=stream_token2,
+            maxpoints=200
+        )
     )
 
-    fig = Figure(data=[trace1], layout=layout)
+    powerlayout = Layout(
+        title='Power Generation from Solar Panel',
+        yaxis=YAxis(
+            title='Power (W)'
+        )
+    )
 
-    print py.plot(fig, filename='Raspberry Pi Streaming Example Values')
+    currentlayout = Layout(
+        title='Temperature Readings',
+        yaxis=YAxis(
+            title='Temperature (C)'
+        )
+    )
+
+    fig1 = Figure(data=[powertrace], layout=powerlayout)
+    print py.plot(fig1, filename='Raspberry Pi Streaming Power Information')
+    stream1 = py.Stream(stream_token1)
+    stream1.open()
+    fig2 = Figure(data=[currenttrace], layout=currentlayout)
+    print py.plot(fig2, filename='Raspberry Pi Streaming Temperature Information')
+    stream2 = py.Stream(stream_token2)
+    stream2.open()
 
 # There is a constant stream of data coming from the Arduino. The first time
 # reading may be in the middle of the stream, which would not be a valid
@@ -88,5 +111,6 @@ while True:
             last_save = time.time()
 
     if args.graph and time.time() - last_plot > args.graph_rate:
-        stream.write({'x': datetime.datetime.now(), 'y': data['accelerometer'][0]})
+        stream1.write({'x': datetime.datetime.now(), 'y': data['power']})
+        stream2.write({'x': datetime.datetime.now(), 'y': data['temperature']})
         last_plot = time.time()
